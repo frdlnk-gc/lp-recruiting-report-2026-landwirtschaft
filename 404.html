@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex">
+  <title>Weiterleitung… | GreenCareers</title>
+  <script>
+  (function () {
+    try {
+      var href = window.location.href;
+      var marker = '/Download-Seite';
+      var idx = href.indexOf(marker);
+
+      // Nicht-Download-Seite-404 -> zurück zur Landingpage
+      if (idx === -1) {
+        window.location.replace('/');
+        return;
+      }
+
+      // Alles nach "/Download-Seite" einsammeln
+      var rest = href.substring(idx + marker.length).replace(/^\/+/, '');
+
+      // Mehrfach dekodieren (WhatsApp kann doppelt kodieren)
+      function dec(s) { try { return decodeURIComponent(s); } catch (e) { return s; } }
+      var decoded = dec(rest);
+      if (decoded.indexOf('%') !== -1) decoded = dec(decoded);
+
+      // Leerer Pfad oder unersetzter Platzhalter {{1}} -> saubere Download-Seite
+      if (!decoded || decoded.indexOf('{{') !== -1 || decoded.indexOf('%7B') !== -1) {
+        window.location.replace('/Download-Seite/');
+        return;
+      }
+
+      // Query normalisieren (sicherstellen, dass es mit ? beginnt)
+      decoded = decoded.replace(/^[?&]+/, '');
+      var target = '/Download-Seite/' + (decoded ? '?' + decoded : '');
+      window.location.replace(target);
+    } catch (e) {
+      window.location.replace('/Download-Seite/');
+    }
+  })();
+  </script>
+  <meta http-equiv="refresh" content="2;url=/Download-Seite/">
+  <style>
+    body{font-family:Arial,Helvetica,sans-serif;background:#161B0E;color:#fff;
+      display:flex;align-items:center;justify-content:center;height:100vh;margin:0;text-align:center;}
+    a{color:#E0A500;font-weight:700;}
+  </style>
+</head>
+<body>
+  <div>
+    <p>Einen Moment – Ihr Report wird geladen…</p>
+    <p><a href="/Download-Seite/">Hier klicken, falls es nicht automatisch weitergeht →</a></p>
+  </div>
+</body>
+</html>
